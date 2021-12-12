@@ -1,7 +1,6 @@
-namespace Apollo.Api.Models
+namespace Apollo.Api.Models;
+
+public class EncryptResponse
 {
-    public class EncryptResponse
-    {
-        
-    }
+
 }

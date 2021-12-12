@@ -1,22 +1,21 @@
 using Apollo.Api.Interfaces;
-namespace Apollo.Api.Services
+namespace Apollo.Api.Services;
+
+public class EncryptionService : IEncryptionService
 {
-    public class EncryptionService : IEncryptionService
+    private readonly HttpClient _client;
+    public EncryptionService(HttpClient client)
     {
-        private readonly HttpClient _client;
-        public EncryptionService(HttpClient client)
-        {
-            _client = client;
-        }
+        _client = client;
+    }
 
-        public void Encrypt(string text)
-        {
+    public void Encrypt(string text)
+    {
 
-        }
+    }
 
-        public void Decrypt(string text)
-        {
+    public void Decrypt(string text)
+    {
 
-        }
     }
 }
