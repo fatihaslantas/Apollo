@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using EncryptionService.Api.Models;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace EncryptionService.Api.Controllers;
 
@@ -6,8 +8,16 @@ namespace EncryptionService.Api.Controllers;
 [Route("[controller]")]
 public class DecryptApiController : ControllerBase
 {
-    public DecryptApiController()
+      private readonly IDataProtector _protector;
+    public DecryptApiController(IDataProtectionProvider provider)
     {
-        
+          _protector = provider.CreateProtector("Apollo.v1");
     }
+
+ [HttpPost]
+    public string Post(EncryptRequest request)
+    {
+        return _protector.Unprotect(request.Text);
+    }
+
 }
