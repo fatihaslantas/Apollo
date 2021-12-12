@@ -19,7 +19,7 @@ public class EncryptApiController : ControllerBase
         if (request == null || string.IsNullOrWhiteSpace(request.Text))
             return BadRequest(new EncryptResponse() { ErrorCode = "4000", Message = "Text can not be empty or null." });
 
-        var response = await _encryptionService.Decrypt(request.Text);
+        var response = await _encryptionService.Encrypt(request.Text);
 
         return Ok(response);
     }

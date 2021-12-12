@@ -20,17 +20,33 @@ public class EncryptionService : IEncryptionService
         var request = new CryptoRequest(text);
         var jsonContent = JsonConvert.SerializeObject(request);
         var contentString = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-        var apiResponse = await _client.PostAsync("/encrypt", contentString);
-        if (!apiResponse.IsSuccessStatusCode)
+        try
         {
-            response.ErrorCode = "5001";
-            response.Message = "Unhandled exception";
-            return response;
-        }
-        
-        string responseBody = await apiResponse.Content.ReadAsStringAsync();
-        var data = JsonConvert.DeserializeObject<EncryptApiResponse>(responseBody);
+            var apiResponse = await _client.PostAsync("/encrypt", contentString);
+            apiResponse.EnsureSuccessStatusCode();
+            string responseBody = await apiResponse.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<EncryptApiResponse>(responseBody);
 
+            if (data == null)
+            {
+                response.ErrorCode = "5002";
+                response.Message = "Unable to get encrypted data from api.";
+            }
+
+            response.Data = data.Data;
+            return response;
+
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            response.ErrorCode = "4040";
+            response.Message = "Encryption service api not found.";
+        }
+        catch (HttpRequestException ex)
+        {
+            response.ErrorCode = "5004";
+            response.Message = ex.Message;
+        }
         return response;
     }
 
@@ -41,16 +57,34 @@ public class EncryptionService : IEncryptionService
         var request = new CryptoRequest(text);
         var jsonContent = JsonConvert.SerializeObject(request);
         var contentString = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-        var apiResponse = await _client.PostAsync("/decrypt", contentString);
-        if (!apiResponse.IsSuccessStatusCode)
-        {
-            response.ErrorCode = "5001";
-            response.Message = "Unhandled exception";
-            return response;
-        }
-        string responseBody = await apiResponse.Content.ReadAsStringAsync();
-        var data = JsonConvert.DeserializeObject<EncryptApiResponse>(responseBody);
 
+        try
+        {
+            var apiResponse = await _client.PostAsync("/decrypt", contentString);
+            apiResponse.EnsureSuccessStatusCode();
+            string responseBody = await apiResponse.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<EncryptApiResponse>(responseBody);
+
+            if (data == null)
+            {
+                response.ErrorCode = "5003";
+                response.Message = "Unable to get decrypted data from api.";
+            }
+
+            response.Data = data.Data;
+            return response;
+
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            response.ErrorCode = "4040";
+            response.Message = "Encryption service api not found.";
+        }
+        catch (HttpRequestException ex)
+        {
+            response.ErrorCode = "5004";
+            response.Message = ex.Message;
+        }
         return response;
     }
 }
