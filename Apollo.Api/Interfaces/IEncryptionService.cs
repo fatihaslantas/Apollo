@@ -1,9 +1,9 @@
-
+using Apollo.Api.Models;
 namespace Apollo.Api.Interfaces
 {
     public interface IEncryptionService
     {
-        void Decrypt(string text);
-        void Encrypt(string text);
+        Task<EncryptResponse> Decrypt(string text);
+        Task<EncryptResponse> Encrypt(string text);
     }
 }
