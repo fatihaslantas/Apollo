@@ -16,6 +16,11 @@ public class EncryptApiController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(CryptoRequest request)
     {
-        return Ok();
+        if (request == null || string.IsNullOrWhiteSpace(request.Text))
+            return BadRequest(new EncryptResponse() { ErrorCode = "4000", Message = "Text can not be empty or null." });
+
+        var response = await _encryptionService.Decrypt(request.Text);
+
+        return Ok(response);
     }
 }
