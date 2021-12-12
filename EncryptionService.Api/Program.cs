@@ -14,7 +14,7 @@ var keysFolder = Path.Combine(builder.Environment.ContentRootPath, "Keys");
 builder.Services.AddDataProtection()
 .PersistKeysToFileSystem(new DirectoryInfo(keysFolder))
  .SetApplicationName("Apollo")
- .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+ .DisableAutomaticKeyGeneration();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

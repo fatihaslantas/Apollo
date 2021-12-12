@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement;
 namespace EncryptionService.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("keyrotate")]
 public class KeyRotateApiController : ControllerBase
 {
     private readonly IKeyManager _keyManager;

@@ -4,7 +4,7 @@ using EncryptionService.Api.Models;
 namespace EncryptionService.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("encrypt")]
 public class EncryptApiController : ControllerBase
 {
     private readonly IDataProtector _protector;
@@ -14,7 +14,7 @@ public class EncryptApiController : ControllerBase
     }
 
     [HttpPost]
-    public string Post(EncryptRequest request)
+    public string Post(CryptoRequest request)
     {
         return _protector.Protect(request.Text);
     }

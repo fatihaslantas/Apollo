@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.DataProtection;
 namespace EncryptionService.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("decrypt")]
 public class DecryptApiController : ControllerBase
 {
       private readonly IDataProtector _protector;
@@ -15,7 +15,7 @@ public class DecryptApiController : ControllerBase
     }
 
  [HttpPost]
-    public string Post(EncryptRequest request)
+    public string Post(CryptoRequest request)
     {
         return _protector.Unprotect(request.Text);
     }
