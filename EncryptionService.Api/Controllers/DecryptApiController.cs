@@ -8,16 +8,22 @@ namespace EncryptionService.Api.Controllers;
 [Route("decrypt")]
 public class DecryptApiController : ControllerBase
 {
-      private readonly IDataProtector _protector;
+    private readonly IDataProtector _protector;
     public DecryptApiController(IDataProtectionProvider provider)
     {
-          _protector = provider.CreateProtector("Apollo.v1");
+        _protector = provider.CreateProtector("Apollo.v1");
     }
 
- [HttpPost]
-    public string Post(CryptoRequest request)
+    [HttpPost]
+    public async Task<IActionResult> Post(CryptoRequest request)
     {
-        return _protector.Unprotect(request.Text);
+        if (request == null || string.IsNullOrWhiteSpace(request.Text))
+            throw new ArgumentNullException(nameof(request.Text), "Text string can not be null or empty");
+
+        var response = new CryptoResponse();
+
+        response.Data = _protector.Unprotect(request.Text);
+        return Ok(response);
     }
 
 }

@@ -14,9 +14,16 @@ public class EncryptApiController : ControllerBase
     }
 
     [HttpPost]
-    public string Post(CryptoRequest request)
+    public async Task<IActionResult> Post(CryptoRequest request)
     {
-        return _protector.Protect(request.Text);
+        if (request == null || string.IsNullOrWhiteSpace(request.Text))
+            throw new ArgumentNullException(nameof(request.Text), "Text string can not be null or empty");
+
+        var response = new CryptoResponse();
+
+        response.Data = _protector.Protect(request.Text);
+
+        return Ok(response);
     }
 
 }
