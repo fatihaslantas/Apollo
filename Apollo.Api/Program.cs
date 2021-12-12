@@ -1,5 +1,6 @@
 using Apollo.Api.Services;
 using Apollo.Api.Interfaces;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,10 @@ builder.Services.AddHttpClient<IEncryptionService, EncryptionService>()
                   httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
               });
 
-
+   builder.Services.AddMvc()
+             .AddJsonOptions(options => {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+     });
 
 var app = builder.Build();
 
