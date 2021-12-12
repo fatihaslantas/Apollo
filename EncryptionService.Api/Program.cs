@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.DataProtection;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +17,12 @@ builder.Services.AddDataProtection()
 .PersistKeysToFileSystem(new DirectoryInfo(keysFolder))
  .SetApplicationName("Apollo")
  .DisableAutomaticKeyGeneration();
+
+
+   builder.Services.AddMvc()
+             .AddJsonOptions(options => {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+     });
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
