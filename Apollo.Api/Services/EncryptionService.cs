@@ -29,8 +29,8 @@ public class EncryptionService : IEncryptionService
 
             if (data == null)
             {
-                response.ErrorCode = "5002";
-                response.Message = "Unable to get encrypted data from api.";
+                response.ErrorCode = ErrorCodes.EncryptedDataNull;
+                response.Message = ErrorCodes.EncryptedDataNull;
             }
 
             response.Data = data.Data;
@@ -39,12 +39,12 @@ public class EncryptionService : IEncryptionService
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            response.ErrorCode = "4040";
-            response.Message = "Encryption service api not found.";
+            response.ErrorCode = (int)ErrorCodes.ServiceNotFound;
+            response.Message = ErrorCodes.ServiceNotFound;
         }
         catch (HttpRequestException ex)
         {
-            response.ErrorCode = "5004";
+            response.ErrorCode = ErrorCodes.GenericError;
             response.Message = ex.Message;
         }
         return response;
@@ -67,24 +67,37 @@ public class EncryptionService : IEncryptionService
 
             if (data == null)
             {
-                response.ErrorCode = "5003";
-                response.Message = "Unable to get decrypted data from api.";
+                response.ErrorCode = ErrorCodes.DecryptedDataNull;
+                response.Message = ErrorCodes.DecryptedDataNull;
             }
 
             response.Data = data.Data;
             return response;
 
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-        {
-            response.ErrorCode = "4040";
-            response.Message = "Encryption service api not found.";
-        }
         catch (HttpRequestException ex)
         {
-            response.ErrorCode = "5004";
+            response.ErrorCode = ErrorCodes.GenericError;
             response.Message = ex.Message;
         }
         return response;
     }
+
+    public async Task<EncryptResponse> RotateKey()
+    {
+        var response = new EncryptResponse();
+        try
+        {
+            var apiResponse = await _client.PostAsync("/keyrotate/rotate-key", null);
+            apiResponse.EnsureSuccessStatusCode();
+            response.Message = "Rotation is successful";
+        }
+        catch (HttpRequestException ex)
+        {
+            response.ErrorCode = ErrorCodes.GenericError;
+            response.Message = ex.Message;
+        }
+        return response;
+    }
+
 }

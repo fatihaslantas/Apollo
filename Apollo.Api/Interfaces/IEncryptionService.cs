@@ -5,5 +5,7 @@ namespace Apollo.Api.Interfaces
     {
         Task<EncryptResponse> Decrypt(string text);
         Task<EncryptResponse> Encrypt(string text);
+        Task<EncryptResponse> RotateKey();
+
     }
 }

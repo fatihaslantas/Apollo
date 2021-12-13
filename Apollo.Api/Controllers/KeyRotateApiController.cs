@@ -6,7 +6,7 @@ namespace Apollo.Api.Controllers;
 [Route("api/keyrotate")]
 public class KeyRotateApiController : ControllerBase
 {
-   private readonly IEncryptionService _encryptionService;
+    private readonly IEncryptionService _encryptionService;
     public KeyRotateApiController(IEncryptionService encryptionService)
     {
         _encryptionService = encryptionService;
@@ -16,7 +16,8 @@ public class KeyRotateApiController : ControllerBase
     [Route("rotate-key")]
     public async Task<IActionResult> RotateKey()
     {
-        return Ok();
+        var response = await _encryptionService.RotateKey();
+        return Ok(response);
     }
 
 }
